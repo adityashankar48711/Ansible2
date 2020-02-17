@@ -1,0 +1,14 @@
+---
+
+- name: Install nginx
+  apt:
+   name: nginx
+   state: present
+
+- name: Insert Index Page
+  template:
+   src: index.html
+   dest: /var/www/html/index.html
+  notify:
+  - restart nginx
+      

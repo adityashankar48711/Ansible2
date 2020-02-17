@@ -1,0 +1,38 @@
+node {
+ try  {
+ notify('Job Started') 
+
+     
+  stage('Git-Checkout') {
+   git 'https://github.com/adityashankar48711/ansible.git'
+  }
+	 
+ def project_path="devops/"
+ 
+ dir(project_path) {	 
+
+  stage('Geting Ready For Ansible') {
+  sh label: 'Jenkins', script: "echo '<h1> TASK BUILD ID: ${env.BUILD_DISPLAY_NAME}</h1>' > index.html"
+}  
+
+stage('Executing Ansible') {
+  sh label: 'Jenkins', script: "ansible-playbook --key=/root/.ssh/awskey.pem -u ubuntu web-playbook.yaml  -vvv"
+}  
+   
+}
+
+notify('Job Completed')   
+} catch (err) {
+  notify("Error ${err}")
+  currentBuild.result = 'FAILURE'
+}
+}
+
+def notify(status){
+    emailext (
+	to: "aditya.shankar@mindtree.com",
+	subject: "${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
+	 body: """<p>${status}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]':</p>
+	<p>Check console output at <a href='${env.BUILD_URL}'>${env.JOB_NAME} [${env.BUILD_NUMBER}]</a></p>""",
+		)
+	}

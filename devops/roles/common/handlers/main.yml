@@ -1,0 +1,7 @@
+---
+# handlers file for common
+  - name: Restart Tomcat
+    shell: "nohup sh /opt/SP/apps/tomcat/bin/catalina.sh start"
+ 
+  - name: restart nginx
+    shell: "sudo /etc/init.d/nginx restart"
